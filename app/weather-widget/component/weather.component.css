@@ -1,0 +1,30 @@
+.card{
+    box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.24);
+}
+.card,
+.card-header,
+.card-footer {
+    border: none;
+    border-radius: 5px;
+    background-color: #00BCD4;
+    color: #FFF;
+}
+
+.card-header,
+.card-footer {
+    padding: 1rem .5rem;
+}
+
+.card-block {
+    padding: 3rem;
+}
+
+.card-block,
+.card-footer{
+    text-align: center;
+}
+
+p {
+    margin: .2rem;
+    text-transform: uppercase;
+}
