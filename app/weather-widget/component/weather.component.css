@@ -1,22 +1,41 @@
 .card{
     box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.24);
+    transition: background-color .5s ease;
+    cursor: pointer;
 }
 .card,
 .card-header,
 .card-footer {
     border: none;
     border-radius: 5px;
-    background-color: #00BCD4;
-    color: #FFF;
 }
 
 .card-header,
 .card-footer {
     padding: 1rem .5rem;
+    background-color: transparent;
 }
 
 .card-block {
-    padding: 3rem;
+    padding: 1.5rem 0;
+} 
+
+#indicator{
+    height: 165px;
+    position: relative;
+}
+
+#indicator i {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50%;
+    margin: -15% 0 0 -25%;
+}
+
+canvas {
+    max-width: 250px;
+    margin-bottom: 1rem;
 }
 
 .card-block,

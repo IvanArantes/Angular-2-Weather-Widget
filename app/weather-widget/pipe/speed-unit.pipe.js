@@ -9,21 +9,23 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 const core_1 = require('@angular/core');
-const platform_browser_1 = require('@angular/platform-browser');
-const http_1 = require('@angular/http');
-const app_component_1 = require('./app.component');
-const weather_component_1 = require('./weather-widget/component/weather.component');
-const speed_unit_pipe_1 = require('./weather-widget/pipe/speed-unit.pipe');
-const temp_unit_pipe_1 = require('./weather-widget/pipe/temp-unit.pipe');
-let AppModule = class AppModule {
+let SpeedUnitPipe = class SpeedUnitPipe {
+    transform(speed, unitType) {
+        switch (unitType) {
+            case "mph":
+                const miles = Number(speed * 1.6).toFixed(0);
+                return miles + "mph";
+            default:
+                const kilometer = Number(speed).toFixed(0);
+                return kilometer + "kph";
+        }
+    }
 };
-AppModule = __decorate([
-    core_1.NgModule({
-        imports: [platform_browser_1.BrowserModule, http_1.JsonpModule, http_1.HttpModule],
-        declarations: [app_component_1.AppComponent, weather_component_1.WeatherComponent, speed_unit_pipe_1.SpeedUnitPipe, temp_unit_pipe_1.TempUnitPipe],
-        bootstrap: [app_component_1.AppComponent]
+SpeedUnitPipe = __decorate([
+    core_1.Pipe({
+        name: 'speedUnit'
     }), 
     __metadata('design:paramtypes', [])
-], AppModule);
-exports.AppModule = AppModule;
-//# sourceMappingURL=app.module.js.map
+], SpeedUnitPipe);
+exports.SpeedUnitPipe = SpeedUnitPipe;
+//# sourceMappingURL=speed-unit.pipe.js.map

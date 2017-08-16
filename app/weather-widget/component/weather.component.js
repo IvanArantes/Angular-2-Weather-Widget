@@ -10,15 +10,86 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 const core_1 = require('@angular/core');
 const weather_service_1 = require('../service/weather.service');
+const weather_model_1 = require('../model/weather.model');
+const constants_1 = require('../constants/constants');
+// pois Skycons está importado apenas como JS, e não TS. 
 let WeatherComponent = class WeatherComponent {
     constructor(service) {
         this.service = service;
-        this.service.getCurrentLocation();
-        this.service.getCurrentWeather(0, 0)
-            .subscribe(weather => console.log(weather), err => console.error(err));
+        this.weatherData = new weather_model_1.Weather(null, null, null, null, null);
+        this.currentSpeedUnit = "kph";
+        this.currentTempUnit = "celsius";
+        this.currentLocation = "";
+        this.icons = new Skycons({ "color": "#FFF" });
+        this.dataReceived = false;
+    }
+    ngOnInit() {
+        this.getCurrentLocation();
+    }
+    getCurrentLocation() {
+        this.service.getCurrentLocation()
+            .subscribe(position => {
+            this.pos = position;
+            this.getCurrentWeather();
+            this.getLocationName();
+        }, err => console.error(err));
+    }
+    getCurrentWeather() {
+        this.service.getCurrentWeather(this.pos.coords.latitude, this.pos.coords.longitude)
+            .subscribe(weather => {
+            this.weatherData.temp = weather["currently"]["temperature"],
+                this.weatherData.summary = weather["currently"]["summary"],
+                this.weatherData.humidity = weather["currently"]["humidity"],
+                this.weatherData.wind = weather["currently"]["windSpeed"],
+                this.weatherData.icon = weather["currently"]["icon"];
+            console.log(this.weatherData); //TODO: REMOVER
+            this.setIcon();
+            this.dataReceived = true;
+        }, err => console.error(err));
+    }
+    getLocationName() {
+        this.service.getLocationName(this.pos.coords.latitude, this.pos.coords.longitude)
+            .subscribe(location => {
+            this.currentLocation = location["results"][5]["formatted_address"];
+        });
+    }
+    toggleUnit() {
+        this.toggleTemp();
+        this.toggleSpeed();
+    }
+    toggleTemp() {
+        if (this.currentTempUnit == "celsius") {
+            this.currentTempUnit = "fahrenheit";
+        }
+        else {
+            this.currentTempUnit = "celsius";
+        }
+    }
+    toggleSpeed() {
+        if (this.currentSpeedUnit == "kph") {
+            this.currentSpeedUnit = "mph";
+        }
+        else {
+            this.currentSpeedUnit = "kph";
+        }
+    }
+    setIcon() {
+        this.icons.add("icon", this.weatherData.icon);
+        this.icons.play();
+    }
+    setStyles() {
+        if (this.weatherData.icon) {
+            this.icons.color = constants_1.WEATHER_COLORS[this.weatherData.icon]["color"];
+            return constants_1.WEATHER_COLORS[this.weatherData.icon];
+        }
+        else {
+            this.icons.color = constants_1.WEATHER_COLORS["default"]["color"];
+            return constants_1.WEATHER_COLORS["default"];
+        }
     }
 };
 WeatherComponent = __decorate([
+    //FEITO PARA REMOVER O ALERTA DO TYPESCRIPT,
     core_1.Component({
         moduleId: module.id,
         selector: 'weather-widget',

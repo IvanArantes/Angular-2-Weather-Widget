@@ -15,18 +15,23 @@ require('rxjs/add/operator/map');
 require('rxjs/add/operator/catch');
 const constants_1 = require('../constants/constants');
 let WeatherService = class WeatherService {
-    constructor(jsonp) {
+    constructor(jsonp, http) {
         this.jsonp = jsonp;
+        this.http = http;
     }
     getCurrentLocation() {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(pos => {
-                return [pos.coords.latitude, pos.coords.longitude];
-            }, error => console.error("Unable to get location - ", error));
+            return Observable_1.Observable.create(observer => {
+                navigator.geolocation.getCurrentPosition(pos => {
+                    observer.next(pos);
+                }),
+                    error => {
+                        return Observable_1.Observable.throw(error);
+                    };
+            });
         }
         else {
-            console.error("Geolocation is not available");
-            return [0, 0];
+            return Observable_1.Observable.throw("Geolocation is not available");
         }
     }
     getCurrentWeather(lat, long) {
@@ -39,10 +44,20 @@ let WeatherService = class WeatherService {
             return Observable_1.Observable.throw(err.json());
         });
     }
+    getLocationName(lat, long) {
+        const url = constants_1.GOOGLE_ROOT;
+        const queryParams = "?latlng=" + lat + "," + long + "&key=" + constants_1.GOOGLE_CODING_API;
+        return this.http.get(url + queryParams)
+            .map(loc => loc.json())
+            .catch(err => {
+            console.error("Unable to get location - ", err);
+            return Observable_1.Observable.throw(err);
+        });
+    }
 };
 WeatherService = __decorate([
     core_1.Injectable(), 
-    __metadata('design:paramtypes', [http_1.Jsonp])
+    __metadata('design:paramtypes', [http_1.Jsonp, http_1.Http])
 ], WeatherService);
 exports.WeatherService = WeatherService;
 //# sourceMappingURL=weather.service.js.map

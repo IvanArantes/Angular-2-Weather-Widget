@@ -9,21 +9,22 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 const core_1 = require('@angular/core');
-const platform_browser_1 = require('@angular/platform-browser');
-const http_1 = require('@angular/http');
-const app_component_1 = require('./app.component');
-const weather_component_1 = require('./weather-widget/component/weather.component');
-const speed_unit_pipe_1 = require('./weather-widget/pipe/speed-unit.pipe');
-const temp_unit_pipe_1 = require('./weather-widget/pipe/temp-unit.pipe');
-let AppModule = class AppModule {
+let TempUnitPipe = class TempUnitPipe {
+    transform(temp, unitType) {
+        switch (unitType) {
+            case "celsius":
+                const celsius = (temp - 32) * 0.556;
+                return celsius;
+            default:
+                return temp;
+        }
+    }
 };
-AppModule = __decorate([
-    core_1.NgModule({
-        imports: [platform_browser_1.BrowserModule, http_1.JsonpModule, http_1.HttpModule],
-        declarations: [app_component_1.AppComponent, weather_component_1.WeatherComponent, speed_unit_pipe_1.SpeedUnitPipe, temp_unit_pipe_1.TempUnitPipe],
-        bootstrap: [app_component_1.AppComponent]
+TempUnitPipe = __decorate([
+    core_1.Pipe({
+        name: 'tempUnit'
     }), 
     __metadata('design:paramtypes', [])
-], AppModule);
-exports.AppModule = AppModule;
-//# sourceMappingURL=app.module.js.map
+], TempUnitPipe);
+exports.TempUnitPipe = TempUnitPipe;
+//# sourceMappingURL=temp-unit.pipe.js.map
